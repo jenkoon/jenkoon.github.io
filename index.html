@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>盐铁专卖政策模拟 · 汉庭策论 · AI辅政 · 全屏观览</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>汉武帝经济政策模拟器</title>
     <style>
         * {
             margin: 0;
@@ -12,579 +12,286 @@
         }
 
         body {
-            background: linear-gradient(145deg, #1f1913 0%, #2a241f 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Microsoft YaHei', '楷体', 'SimHei', 'PingFang SC', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a3c2c 0%, #2c5e3a 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'Times New Roman', serif;
-            padding: 24px;
-            transition: background 0.2s;
-        }
-
-        /* 全屏模式下的微调：让背景更深邃，卡片稍微宽松 */
-        body:fullscreen {
-            background: #1a1410;
-            padding: 20px;
-        }
-        body:-webkit-full-screen {
-            background: #1a1410;
-            padding: 20px;
-        }
-        body:-moz-full-screen {
-            background: #1a1410;
-            padding: 20px;
-        }
-
-        /* 古风竹简质感卡片 */
-        .card {
-            max-width: 880px;
-            width: 100%;
-            background: #fff9ef;
-            background-image: radial-gradient(circle at 10% 20%, rgba(200, 170, 120, 0.08) 2%, transparent 2.5%);
-            background-size: 24px 24px;
-            border-radius: 48px 20px 48px 20px;
-            box-shadow: 0 30px 40px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 245, 215, 0.8);
-            padding: 28px 26px 32px 26px;
-            border: 1px solid #dcb57c;
-            transition: all 0.2s;
-        }
-
-        /* 头部区域与全屏按钮联动 */
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-            gap: 12px;
-        }
-        h1 {
-            text-align: left;
-            font-size: 1.9rem;
-            letter-spacing: 2px;
-            color: #6b3a1c;
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-            font-weight: 600;
-            text-shadow: 1px 1px 0 #fae6c3;
-            flex: 1;
-        }
-        .fullscreen-btn {
-            background: #936f48;
-            border: none;
-            color: #fff3e2;
-            font-size: 1.3rem;
-            padding: 6px 16px;
-            border-radius: 60px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 3px 0 #533e26;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-        .fullscreen-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #533e26;
-        }
-        .sub {
-            text-align: center;
-            color: #b87a44;
-            margin-bottom: 28px;
-            font-size: 0.9rem;
-            font-style: italic;
-            letter-spacing: 1px;
-            background: #f7efdf;
-            display: inline-block;
-            width: auto;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 4px 18px;
-            border-radius: 60px;
-            backdrop-filter: blur(2px);
-        }
-
-        /* 策令按钮组 */
-        .buttons {
             display: flex;
             justify-content: center;
-            gap: 18px;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fef7e0;
+            background-image: radial-gradient(circle at 10% 20%, rgba(210, 180, 140, 0.1) 2%, transparent 2.5%);
+            background-size: 20px 20px;
+            border-radius: 40px 40px 30px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+            overflow: hidden;
+            border-bottom: 8px solid #b87c4f;
+        }
+
+        .header {
+            background: #3e2720;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+        }
+
+        .header h1 {
+            color: #ffd966;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 0 #5d3a1a;
+            font-weight: normal;
+        }
+
+        .header p {
+            color: #e0cba0;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .policy-buttons {
+            display: flex;
+            gap: 20px;
+            padding: 30px 20px 20px;
+            justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 28px;
+            background: #f5ebd2;
         }
 
-        button {
-            font-size: 1.05rem;
-            padding: 10px 24px;
-            background: #7e441f;
-            border: none;
-            color: #fff3e0;
-            border-radius: 60px;
-            cursor: pointer;
+        .btn {
+            padding: 12px 28px;
+            font-size: 1.2rem;
             font-weight: bold;
-            transition: 0.2s;
-            box-shadow: 0 5px 0 #4a2a12;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             font-family: inherit;
-            letter-spacing: 1px;
         }
 
-        button:active {
+        .btn-private {
+            background: #8b5a2b;
+            color: #f0e6c5;
+            border-bottom: 4px solid #5a3a1a;
+        }
+
+        .btn-state {
+            background: #2c5e3a;
+            color: #ffefc0;
+            border-bottom: 4px solid #1a3c2c;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+        .btn:active {
             transform: translateY(2px);
-            box-shadow: 0 2px 0 #4a2a12;
         }
 
-        /* 国库竹简区域 */
-        .treasury {
-            background: #2f241b;
-            border-radius: 36px;
-            padding: 22px 24px;
-            color: #f7e9cf;
-            box-shadow: inset 0 0 0 1px #77633e, 0 10px 20px rgba(0, 0, 0, 0.3);
+        .active-btn {
+            outline: 3px solid #d4af37;
+            outline-offset: 2px;
         }
 
-        .info {
+        .data-panel {
+            background: #2c2418;
+            margin: 10px 20px 20px;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: inset 0 0 0 1px #5c4a32, 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .metric {
+            background: #fff8ed;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .metric-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #5a3a1a;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            border-bottom: 1px dashed #d4af37;
+            padding-bottom: 5px;
             margin-bottom: 12px;
-            font-size: 1.3rem;
-            font-weight: 500;
-            background: #1f1610;
-            padding: 8px 20px;
-            border-radius: 48px;
         }
 
-        .info span:first-child {
-            font-size: 0.95rem;
-            letter-spacing: 2px;
-            color: #e9cd9c;
-        }
-
-        #revenueNum {
-            font-size: 2rem;
-            font-weight: bold;
-            font-family: monospace;
-            background: #00000030;
-            padding: 0 12px;
-            border-radius: 40px;
-            color: #ffdf9c;
-        }
-
-        .bar-bg {
-            background: #1e140e;
-            border-radius: 40px;
-            height: 52px;
+        .bar-container {
+            background: #e0d6c0;
+            border-radius: 30px;
             overflow: hidden;
-            margin: 16px 0 8px;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+            height: 36px;
+            margin: 10px 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        .bar-fill {
-            background: linear-gradient(90deg, #e7bc7e, #f3cf90);
-            width: 0%;
+        .bar {
             height: 100%;
+            width: 0%;
+            transition: width 0.4s ease-out;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 20px;
+            padding-right: 12px;
+            color: white;
             font-weight: bold;
-            color: #2d1a0a;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            border-radius: 40px;
-            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: inset 0 1px 2px rgba(255, 245, 180, 0.6);
+            text-shadow: 0 0 2px black;
         }
 
-        .desc {
-            margin-top: 20px;
-            text-align: center;
-            background: #1e1610;
-            padding: 12px 16px;
-            border-radius: 36px;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            border-left: 4px solid #e5b44b;
-            color: #fbefd3;
-        }
+        .bar-treasury { background: linear-gradient(90deg, #c9a03d, #f3c26b); }
+        .bar-price { background: linear-gradient(90deg, #b5651e, #d98c2b); }
+        .bar-stable { background: linear-gradient(90deg, #4f7a3b, #7cb342); }
 
-        /* 翰林AI辅政阁 */
-        .ai-box {
-            margin-top: 28px;
-            background: #3a2b1d;
-            border-radius: 32px;
-            padding: 16px 18px;
-            text-align: center;
-            border: 1px solid #e5b44b;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s;
-        }
-
-        .ai-btn {
-            background: #f3cf8a;
-            color: #3b281a;
-            box-shadow: 0 3px 0 #a57138;
-            font-weight: bold;
-            margin-bottom: 14px;
-            padding: 8px 28px;
+        .value-text {
             font-size: 1rem;
+            margin-top: 6px;
+            text-align: right;
+            color: #5a3a1a;
+            font-weight: bold;
         }
 
-        .ai-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #a57138;
-        }
-
-        .ai-comment {
-            font-style: italic;
-            color: #fef0cf;
-            background: #2c2118;
-            padding: 14px;
-            border-radius: 28px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            text-align: left;
-            letter-spacing: 0.3px;
-            border-left: 6px solid #f3cf8a;
-            transition: all 0.2s;
-        }
-
-        footer {
+        .conclusion {
+            background: #e8dcc8;
+            margin: 10px 20px 20px;
+            padding: 15px 20px;
+            border-radius: 20px;
             text-align: center;
-            margin-top: 28px;
+            font-size: 1rem;
+            color: #2c5e3a;
+            border-left: 6px solid #c9a03d;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #3e2720;
+            padding: 12px;
+            text-align: center;
+            color: #b8a87c;
             font-size: 0.7rem;
-            color: #b49263;
-            border-top: 1px dashed #dbb06b;
-            padding-top: 14px;
-            font-family: monospace;
         }
 
-        @media (max-width: 650px) {
-            .card {
-                padding: 18px;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            .fullscreen-btn {
-                font-size: 1rem;
-                padding: 4px 12px;
-            }
-            button {
-                padding: 6px 16px;
-                font-size: 0.9rem;
-            }
-            .info {
-                font-size: 1rem;
-            }
-            #revenueNum {
-                font-size: 1.6rem;
-            }
-            .bar-fill {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* iPad 横竖屏优化 */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .card {
-                max-width: 90%;
-            }
-            .fullscreen-btn {
-                font-size: 1.2rem;
-                padding: 6px 18px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
+        @media (max-width: 550px) {
+            .btn { padding: 8px 16px; font-size: 1rem; }
+            .metric-title { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-<div class="card">
-    <div class="header-row">
-        <h1>🏮 盐铁专卖 · 庙堂策 🏮</h1>
-        <button class="fullscreen-btn" id="fullscreenBtn" aria-label="全屏沉浸观览">⛶ 全屏</button>
-    </div>
-    <div class="sub">——  AI 辅政 · 洞悉国本盈亏 ——</div>
-
-    <!-- 三策治国 -->
-    <div class="buttons">
-        <button id="btnPrivate">🏷️ 放开私营商</button>
-        <button id="btnPartial">⚖️ 部分官营</button>
-        <button id="btnMonopoly">👑 盐铁专卖</button>
+<div class="container">
+    <div class="header">
+        <h1>🏛️ 经济政策模拟器</h1>
+        <p>盐铁官营 · 五铢钱 · 国计民生</p>
     </div>
 
-    <!-- 国库动态 -->
-    <div class="treasury">
-        <div class="info">
-            <span>📜 国库岁入 (万石 / 年)</span>
-            <span id="revenueNum">—</span>
+    <div class="policy-buttons">
+        <button class="btn btn-private" id="btnPrivate">🔻 盐铁私营 + 私人铸币</button>
+        <button class="btn btn-state" id="btnState">🏹 盐铁官营 + 统一五铢钱</button>
+    </div>
+
+    <div class="data-panel">
+        <div class="metric">
+            <div class="metric-title">
+                <span>💰 国库收入</span>
+                <span id="treasuryLabel">低</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar bar-treasury" id="treasuryBar" style="width: 0%;"></div>
+            </div>
+            <div class="value-text">影响：能否养兵、修路、赈灾</div>
         </div>
-        <div class="bar-bg">
-            <div class="bar-fill" id="barFill"> </div>
+
+        <div class="metric">
+            <div class="metric-title">
+                <span>🧂 盐价</span>
+                <span id="priceLabel">高</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar bar-price" id="priceBar" style="width: 0%;"></div>
+            </div>
+            <div class="value-text">影响：百姓生活成本</div>
         </div>
-        <div class="desc" id="policyDesc">
-            点击上方策令，览盐铁之策，观国库虚实
+
+        <div class="metric">
+            <div class="metric-title">
+                <span>📊 物价稳定性</span>
+                <span id="stableLabel">波动大</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar bar-stable" id="stableBar" style="width: 0%;"></div>
+            </div>
+            <div class="value-text">影响：经济秩序、商人投机</div>
         </div>
     </div>
 
-    <!-- AI 问策阁 -->
-    <div class="ai-box">
-        <button class="ai-btn" id="aiAdviceBtn">🤖 翰林AI · 奏议策论</button>
-        <div class="ai-comment" id="aiComment">
-            📍 点击「翰林AI·奏议策论」，太学智囊为您剖析当下盐铁政令之得失，辅佐圣断。
-        </div>
+    <div class="conclusion" id="conclusion">
+        👆 请点击上方按钮，对比两种经济政策
     </div>
-    <footer>
-        🧧 盐铁论 · 古今鉴 | 本策阁以汉代财政为蓝本，AI实时献策，展治国之道。⛶ 全屏体验更佳
-    </footer>
+    <div class="footer">
+        数据参考《史记·平准书》《盐铁论》 | 模拟对比仅供教学参考
+    </div>
 </div>
 
 <script>
-    // ------------------------------
-    // 盐铁政策核心数据模型
-    // ------------------------------
-    let currentPolicy = {
-        name: '盐铁专卖',
-        value: 100,
-        detail: '⚡ 盐铁专卖：尽收山海之利，盐铁归公，豪强敛息，国库岁入达100万石，北击匈奴，尊儒改制，奠定大汉盛世根基。'
+    const data = {
+        private: {
+            treasury: { percent: 28, label: "低" },
+            price: { percent: 85, label: "高" },
+            stable: { percent: 25, label: "波动大" },
+            conclusion: "❌ 盐铁私营 + 私人铸币：富商豪强把控利润，国库空虚；盐价高昂，百姓负担重；货币混乱，物价不稳。"
+        },
+        state: {
+            treasury: { percent: 92, label: "高" },
+            price: { percent: 30, label: "稳定" },
+            stable: { percent: 95, label: "平稳" },
+            conclusion: "✅ 盐铁官营 + 统一五铢钱：国家掌控盐铁利润，国库充实；盐价稳定，百姓吃得起盐；统一货币，物价平稳，经济有序。"
+        }
     };
 
-    // DOM 元素获取
     const btnPrivate = document.getElementById('btnPrivate');
-    const btnPartial = document.getElementById('btnPartial');
-    const btnMonopoly = document.getElementById('btnMonopoly');
-    const revenueSpan = document.getElementById('revenueNum');
-    const barFill = document.getElementById('barFill');
-    const descDiv = document.getElementById('policyDesc');
-    const aiCommentDiv = document.getElementById('aiComment');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const btnState = document.getElementById('btnState');
+    const treasuryBar = document.getElementById('treasuryBar');
+    const treasuryLabel = document.getElementById('treasuryLabel');
+    const priceBar = document.getElementById('priceBar');
+    const priceLabel = document.getElementById('priceLabel');
+    const stableBar = document.getElementById('stableBar');
+    const stableLabel = document.getElementById('stableLabel');
+    const conclusionDiv = document.getElementById('conclusion');
 
-    // 全屏逻辑 (支持电脑浏览器 / iPad Safari / Chrome)
-    function toggleFullscreen() {
-        const docEl = document.documentElement;
-        const isFullscreen = !!(
-            document.fullscreenElement ||
-            document.webkitFullscreenElement ||
-            document.mozFullScreenElement ||
-            document.msFullscreenElement
-        );
-        
-        if (!isFullscreen) {
-            // 进入全屏，兼容各种浏览器
-            const requestMethod = docEl.requestFullscreen ||
-                docEl.webkitRequestFullscreen ||
-                docEl.mozRequestFullScreen ||
-                docEl.msRequestFullscreen;
-            if (requestMethod) {
-                requestMethod.call(docEl).catch(err => {
-                    console.warn(`全屏请求失败: ${err.message}`);
-                    // 降级提示，不影响功能
-                    alert("当前浏览器不支持全屏API，但您可手动缩放页面至全屏。");
-                });
-            } else {
-                alert("您的浏览器不支持全屏功能");
-            }
+    function updateUI(policy) {
+        const d = data[policy];
+        treasuryBar.style.width = d.treasury.percent + '%';
+        treasuryLabel.innerText = d.treasury.label;
+        priceBar.style.width = d.price.percent + '%';
+        priceLabel.innerText = d.price.label;
+        stableBar.style.width = d.stable.percent + '%';
+        stableLabel.innerText = d.stable.label;
+        conclusionDiv.innerHTML = d.conclusion;
+
+        if (policy === 'private') {
+            btnPrivate.classList.add('active-btn');
+            btnState.classList.remove('active-btn');
         } else {
-            // 退出全屏
-            const exitMethod = document.exitFullscreen ||
-                document.webkitExitFullscreen ||
-                document.mozCancelFullScreen ||
-                document.msExitFullscreen;
-            if (exitMethod) {
-                exitMethod.call(document).catch(err => {
-                    console.warn(`退出全屏失败: ${err.message}`);
-                });
-            }
+            btnState.classList.add('active-btn');
+            btnPrivate.classList.remove('active-btn');
         }
     }
 
-    // 绑定全屏按钮事件
-    if (fullscreenBtn) {
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
-        // 为了iPad/电脑的直观反馈，修改按钮文本（非必须但提升体验: 动态更改图标）
-        document.addEventListener('fullscreenchange', updateFullscreenButtonText);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenButtonText);
-        document.addEventListener('mozfullscreenchange', updateFullscreenButtonText);
-        document.addEventListener('MSFullscreenChange', updateFullscreenButtonText);
-        
-        function updateFullscreenButtonText() {
-            const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-            if (fullscreenBtn) {
-                fullscreenBtn.innerHTML = isFull ? '✕ 退出' : '⛶ 全屏';
-            }
-        }
-        // 初始化文本
-        updateFullscreenButtonText();
-    }
+    btnPrivate.addEventListener('click', () => updateUI('private'));
+    btnState.addEventListener('click', () => updateUI('state'));
 
-    // 辅助函数: 更新UI (国库收入柱状图，详细描述)
-    function setPolicy(value, name, detail) {
-        currentPolicy = { name, value, detail };
-        revenueSpan.innerText = value;
-        let fillPercent = Math.min(100, Math.max(0, value));
-        barFill.style.width = fillPercent + '%';
-        if (fillPercent >= 28) {
-            barFill.innerText = value + ' 万石';
-        } else {
-            barFill.innerText = '';
-        }
-        descDiv.innerHTML = detail;
-        // 政策变更后，清空之前的AI评价，体现实时性
-        aiCommentDiv.innerHTML = '📌 新策已定，请点击「翰林AI·奏议策论」获取针对「' + name + '」的独到剖析。';
-        updateBarColor(value);
-    }
-
-    // 柱状颜色动态 (国库充盈程度)
-    function updateBarColor(value) {
-        const bar = document.getElementById('barFill');
-        if (value < 40) {
-            bar.style.background = "linear-gradient(90deg, #bb7640, #d38c4a)";
-            bar.style.boxShadow = "inset 0 1px 3px rgba(255, 100, 0, 0.4)";
-        } else if (value < 75) {
-            bar.style.background = "linear-gradient(90deg, #dead6a, #efca8a)";
-            bar.style.boxShadow = "inset 0 1px 2px rgba(245, 215, 110, 0.6)";
-        } else {
-            bar.style.background = "linear-gradient(90deg, #f3cf7a, #ffe0a3)";
-            bar.style.boxShadow = "inset 0 1px 4px rgba(255, 245, 170, 0.7)";
-        }
-    }
-
-    // ---------- AI 智脑点评模块（深度分析与实时风格）----------
-    function getDetailedAIComment(policyName, policyValue) {
-        if (policyName === '放开私营商') {
-            let extra = '';
-            if (policyValue <= 30) {
-                extra = ' 如今国库岁入仅30万石，边防补给匮乏，富商大贾垄断海盐、铁器，民间私采泛滥，流弊深远。';
-            } else {
-                extra = ' 纵稍有浮动，然私营商本质使国家丧失定价权，利散于豪族，非长久之计。';
-            }
-            return `📜 【AI 御史台奏】「放开私营商」失之管控，犹如纵虎归山。${extra} 汉室旧鉴，吴王濞即因盐铁之利坐大，终酿七国之乱。AI建议：弊大于利，宜速改弦更张，复归专卖。`;
-        } 
-        else if (policyName === '部分官营') {
-            let analysis = '⚖️ 部分官营：官商参半，虽比纯私营稍增税赋，然各地盐铁官与私贾勾连，价格紊乱，朝廷年入约60万石。';
-            if (policyValue >= 60 && policyValue < 80) {
-                analysis += ' 此政策仅解燃眉之急，却无法根治盐铁之利外溢。仿若以水救火，薪不尽火不灭。';
-            } else {
-                analysis += ' 臣观之，豪右往往操控私市，侵蚀官营份额，最终依旧削弱中枢财力。';
-            }
-            return `🏮 【AI 盐铁论议】「部分官营」乃权宜之策。${analysis} AI推算：若欲北逐匈奴，兴修水利，必须完全专卖。建议逐步迈向彻底官营。`;
-        } 
-        else {
-            let prosperityMsg = '';
-            if (policyValue === 100) {
-                prosperityMsg = ' 岁入百万石，太仓之粟陈陈相因，武备充足，汉武帝北却匈奴，南抚百越，皆仰仗盐铁之利。';
-            } else if (policyValue > 85) {
-                prosperityMsg = ' 国库丰盈，军民振奋，实乃强化中央集权之不二法门。';
-            } else {
-                prosperityMsg = ' 虽有小损，但专卖大政稳定，朝廷调度有方，远超其余策令。';
-            }
-            return `👑 【翰林AI 智策评】「盐铁专卖」法度森严，尽收山海，利归大司农。${prosperityMsg} 依据桑弘羊《盐铁论》，专卖既可平准物价，又能筹措军资，实为汉室柱石。AI强烈推荐：延续专卖，并配合均输平准，天下大利。`;
-        }
-    }
-
-    // 模拟AI实时生成不同时辰前缀以及随机短评后缀，增加智能感
-    function getAICommentWithStyle(policyName, policyValue) {
-        let baseComment = getDetailedAIComment(policyName, policyValue);
-        const hour = new Date().getHours();
-        let timeGreet = '';
-        if (hour < 12) timeGreet = '【朝会启奏】';
-        else if (hour < 18) timeGreet = '【未时议政】';
-        else timeGreet = '【秉烛夜对】';
-        
-        const epilogueList = [
-            ' 此乃AI稽考汉书·食货志所得。',
-            ' 深鉴古今，唯专卖足国强兵。',
-            ' 愿陛下明察秋毫，择善而从。',
-            ' 智策阁献言，望参详施行。',
-            ' 据大司农数据推算，此策影响深远。'
-        ];
-        const randomSuffix = epilogueList[Math.floor(Math.random() * epilogueList.length)];
-        return `${timeGreet} ${baseComment} ${randomSuffix}`;
-    }
-
-    // AI 按钮交互 + 动态评语
-    const aiAdviceBtn = document.getElementById('aiAdviceBtn');
-    aiAdviceBtn.addEventListener('click', () => {
-        const curName = currentPolicy.name;
-        const curVal = currentPolicy.value;
-        const adviceText = getAICommentWithStyle(curName, curVal);
-        aiCommentDiv.innerHTML = adviceText;
-    });
-
-    // 按钮高亮当前选中策略 (辅助视觉)
-    function setActiveButton(activeBtnId) {
-        const btns = [btnPrivate, btnPartial, btnMonopoly];
-        btns.forEach(btn => {
-            if (btn) {
-                btn.style.opacity = '0.85';
-                btn.style.transform = 'scale(1)';
-                btn.style.background = '#7e441f';
-            }
-        });
-        const activeBtn = document.getElementById(activeBtnId);
-        if (activeBtn) {
-            activeBtn.style.background = '#a55d31';
-            activeBtn.style.opacity = '1';
-            activeBtn.style.transform = 'scale(1.01)';
-        }
-    }
-
-    // 封装最终策略设定 (附带高亮)
-    function finalSetPolicy(value, name, detail) {
-        setPolicy(value, name, detail);
-        if (name === '放开私营商') setActiveButton('btnPrivate');
-        else if (name === '部分官营') setActiveButton('btnPartial');
-        else if (name === '盐铁专卖') setActiveButton('btnMonopoly');
-    }
-
-    // 绑定三策按钮
-    btnPrivate.onclick = () => {
-        finalSetPolicy(30, '放开私营商', '🏮 放开私营商：富商大贾垄断山海之利，国家仅征收微薄市税，豪强坐大，国库空虚。岁入仅30万石，边防废弛，诸侯王趁机坐大，非社稷之福。');
-    };
-    btnPartial.onclick = () => {
-        finalSetPolicy(60, '部分官营', '⚙️ 部分官营：朝廷与私营并行，盐铁之利半归官府，但私灶难禁，地方官吏中饱，岁入60万石。虽有提升仍存隐忧，豪族仍有隙可乘。');
-    };
-    btnMonopoly.onclick = () => {
-        finalSetPolicy(100, '盐铁专卖', '🏯 盐铁专卖：统揽天下盐铁，官府设铁官、盐官，尽收山海之利。国库岁入100万石，军资丰沛，太仓充实，为汉武盛世奠定牢固基石。');
-    };
-
-    // 初始化默认专卖政策并高亮
-    finalSetPolicy(100, '盐铁专卖', '🏯 盐铁专卖：统揽天下盐铁，官府设铁官、盐官，尽收山海之利。国库岁入100万石，军资丰沛，太仓充实，为汉武盛世奠定牢固基石。');
-
-    // 为每个按钮增加鼠标悬停音效感(纯视觉反馈)
-    const allBtns = document.querySelectorAll('button');
-    allBtns.forEach(btn => {
-        btn.addEventListener('mouseenter', (e) => {
-            if (!e.target.disabled) e.target.style.filter = 'brightness(1.05)';
-        });
-        btn.addEventListener('mouseleave', (e) => {
-            e.target.style.filter = 'brightness(1)';
-        });
-    });
-    
-    // iPad / 移动端特殊优化：当全屏模式切换时避免页面重排抖动
-    window.addEventListener('resize', () => {
-        // 确保全屏切换后柱状图文字位置适当 (简单重绘，无副作用)
-        if (barFill && currentPolicy) {
-            const fillPercent = Math.min(100, Math.max(0, currentPolicy.value));
-            if (fillPercent >= 28) {
-                barFill.innerText = currentPolicy.value + ' 万石';
-            } else {
-                barFill.innerText = '';
-            }
-        }
-    });
-    
-    // 增强AI体验: 首次加载完成后如果用户未点击AI，可温和提示（不做自动弹窗，保留静默）
-    // 符合辅助AI决策定位
-    console.log("盐铁专卖策议阁加载完毕 | 全屏按钮同时兼容电脑与iPad");
+    updateUI('private');
 </script>
 </body>
 </html>
